@@ -8,7 +8,8 @@ from readRef import readText, readText2
 import sqlite3
 from flask import Flask, render_template, redirect, flash, url_for
 from flask_sqlalchemy import SQLAlchemy
-from create_db2 import Book, Notes, readBookCover, readTitleAuthor_path, readTitleAuthor, readSummary
+from create_db2 import Book, Notes, readBookCover, readTitleAuthor_path, \
+    readTitleAuthor, readSummary, filter_menu_by2
 
 app = Flask(__name__)
 app.secret_key = 'allo'
@@ -32,10 +33,11 @@ def home():
     return render_template("homepage_unfiltered_menu.html", title="History Footnote: Home",
                            bookList=display_by_cover)
 
-@app.route('/<tag>')
-def home(tag):
-    list_routes = [url_for("active_tab1", x=pathByTitleAuthor[i]) for i in range(len(listBookCovers))]
-    display_by_cover = {listBookCovers[i]: list_routes[i] for i in range(len(listBookCovers))}
+@app.route('/<tag1>/<tag2>')
+def filter(tag1, tag2):
+    filter_paths, indexes = filter_menu_by2(tag1, tag2)
+    list_routes = [url_for("active_tab1", x=filter_paths[i]) for i in range(len(filter_paths))]
+    display_by_cover = {listBookCovers[indexes[i]-1]: list_routes[i-1] for i in range(len(indexes))}
     return render_template("homepage_unfiltered_menu.html", title="History Footnote: Home",
                            bookList=display_by_cover)
 
