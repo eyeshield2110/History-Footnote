@@ -1,0 +1,124 @@
+{% extends "main_menu_base.html" %}
+{% block header %} {{ super() }}{% endblock %}
+
+{% block navbar %}{{ super() }}{% endblock %}
+
+{% block contents %}
+    <head>
+        <style>
+            div.book-description {
+                padding: 10px;
+                margin: 30px;
+            }
+
+            div.book-description p, div.book-description h3 {
+                margin: 10px;
+            }
+
+            div.book-description img {
+                margin: 10px;
+            }
+
+            div.book-summary {
+                padding: 10px;
+                margin: 10px;
+            }
+
+            div.book-cover {
+                float: left;
+                padding: 10px;
+            }
+
+            div.book-reader {
+                padding: 10px;
+                margin: 30px;
+                top: auto;
+            }
+
+            div.embedded-notes {
+                padding: 10px;
+                margin: 30px;
+                position: -webkit-sticky;
+                position: sticky;
+                float: right;
+                top: 0;
+                width: 20vw;
+                min-width: 100px;
+            {#display: none#}
+
+            }
+
+            div#integral-text {
+                margin: 10px;
+            }
+
+            img {
+                max-width: 80%;
+                min-width: 150px;
+                height: auto;
+
+            }
+
+            div.ind-note {
+            }
+        </style>
+    </head>
+    <body>
+
+    <div class="container-fluid book-description row">
+
+        <div class="book-cover col-md-3">
+            <img src="{{ bookCover }}" height="250" width="auto" alt="{{ titleAuthor }}">
+        </div>
+
+        <div class="book-summary col-md-8">
+            <h3 id="top">{{ title }}</h3>
+            <p>{{ bookSummary }}</p>
+        </div>
+    </div>
+
+
+    <div class="container-fluid book-navigation">
+        <div class="embedded-notes">
+            <p>
+                Put table of content (with chapter links here: floating
+            </p>
+        </div>
+
+        <div class="container-fluid row book-reader col-sm-8">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link {% block activeLink1 %}active{% endblock %}"
+                       href="{% block link1 %}#{% endblock %}">Integral text</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% block activeLink2 %}{% endblock %}"
+                       href="{% block link2 %}{{ tab2 }}{% endblock %}">Extracted notes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% block activeLink3 %}{% endblock %}"
+                       href="{% block link3 %}{{ tab3 }}{% endblock %}">Resources and external links</a>
+                </li>
+            </ul>
+
+            {% block activeTab %}
+                <div id="integral-text">
+                    <div class="col-12">
+                        <p>
+                            {% block integralText %}
+                                {% for line in integralText %}
+                                    <p>{{ line|safe }}</p>
+                                {% endfor %}
+                            {% endblock %}
+                        </p>
+                    </div>
+                </div>
+
+            {% endblock %}
+        </div>
+
+
+    </div>
+    </body>
+    </html>
+{% endblock %}

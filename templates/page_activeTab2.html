@@ -1,0 +1,31 @@
+{% extends "page_base_activeTab1.html" %}
+
+
+{% block activeLink1 %}{% endblock %}
+{% block activeLink2 %}active{% endblock %}
+{% block activeLink3 %}{% endblock %}
+
+{% block link1 %}{{ tab1 }}{% endblock %}
+{% block link2 %}#{% endblock %}
+{% block link3 %}{{ tab3 }}{% endblock %}
+
+{% block activeTab %}
+        <div class="notes col-12">
+            <p>
+                {% block notes %}
+                    These are some notes about this book.
+
+                    <div class="container">
+                        <dl class="row">
+                            <dt class="col-sm-3">First note</dt>
+                            <dd class="col-sm-9">content of the first note. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. </dd>
+                            <dt class="col-sm-3">Second note</dt>
+                            <dd class="col-sm-9">content of the second note. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</dd>
+                            <dt class="col-sm-3">Third note</dt>
+                            <dd class="col-sm-9">content of the third note. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. </dd>
+                        </dl>
+                    </div>
+                {% endblock %}
+            </p>
+        </div>
+{% endblock %}

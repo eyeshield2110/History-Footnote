@@ -1,0 +1,14 @@
+{%  extends "main_menu_base.html" %}
+
+{% block header %} {{  super() }} {% endblock %}
+
+
+
+
+{% block namePage %}History Footnote{% endblock %}
+
+{% block page %}
+    {% for bookCover, link in bookList.items()%}
+            <a href="{{ link }}"><img src={{ bookCover}} width="250" height="auto"  alt=""></a>
+    {% endfor %}
+{% endblock %}

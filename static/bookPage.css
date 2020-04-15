@@ -1,0 +1,45 @@
+div.book-description{
+    padding: 10px;
+    margin: 30px;
+}
+div.book-description p, div.book-description h3  {
+    margin: 10px;
+}
+div.book-description img {
+    margin: 10px;
+}
+div.book-summary{
+    padding: 10px;
+    margin: 10px;
+}
+div.book-cover{
+    float:left;
+    padding: 10px;
+}
+div.book-reader{
+    padding: 10px;
+    margin: 30px;
+    top: auto;
+}
+div.embedded-notes{
+    padding: 10px;
+    margin: 30px;
+    position: -webkit-sticky;
+    position: sticky;
+    float: right;
+    top: 0;
+    width: 20vw;
+    min-width: 100px;
+
+}
+div.integral-text{
+    margin: 10px;
+}
+img{
+    max-width: 80%;
+    min-width: 150px;
+    height: auto;
+
+}
+div.ind-note{
+}

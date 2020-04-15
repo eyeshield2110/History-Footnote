@@ -1,0 +1,25 @@
+{% extends "page_base_activeTab1.html" %}
+
+
+{% block activeLink1 %}{% endblock %}
+{% block activeLink2 %}{% endblock %}
+{% block activeLink3 %}active{% endblock %}
+
+{% block link1 %}{{ tab1 }}{% endblock %}
+{% block link2 %}{{ tab2 }}{% endblock %}
+{% block link3 %}#{% endblock %}
+
+{% block activeTab %}
+        <div class="resources col-12">
+            <p>
+                {% block resources %}
+                    Here are some resources and links about this book.
+                    <ol>
+                        <li><a href="#">www.link.com</a></li>
+                        <li><a href="#">www.anotherlink.com</a></li>
+                        <li><a href="#">www.fakelink.com</a></li>
+                    </ol>
+                {% endblock %}
+            </p>
+        </div>
+{% endblock %}
