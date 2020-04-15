@@ -102,17 +102,30 @@ def readSummary():
     return summaries
 
 
+# return paths for filter menu
 def filter_menu_by(tag_type, tag_value):
-    value = tag_value
-    filter_books = []
+    filter_paths = []
     if tag_type == "period_tag":
-        result = db.session.query(Book).filter(Book.period_tag == "19th")
-
-
-conn = sqlite3.connect("books_db2.sqlite3")
-c = conn.cursor()
-user = c.fetchone()
-conn.close()
+        result = db.session.query(Book).filter(Book.period_tag == tag_value)
+        for row in result:
+            str_path = row.title + " by " + row.author
+            path_as_ls = str_path.split(" ")
+            new_path = ""
+            for e in path_as_ls:
+                new_path += e + "_"
+            new_path = new_path[:-1]
+            filter_paths.append(new_path)
+    elif tag_type == "location_tag":
+        result = db.session.query(Book).filter(Book.location_tag == tag_value)
+        for row in result:
+            str_path = row.title + " by " + row.author
+            path_as_ls = str_path.split(" ")
+            new_path = ""
+            for e in path_as_ls:
+                new_path += e + "_"
+            new_path = new_path[:-1]
+            filter_paths.append(new_path)
+    return filter_paths
 
 
 
