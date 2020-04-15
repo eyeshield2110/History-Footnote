@@ -127,6 +127,7 @@ def filter_menu_by(tag_type, tag_value):
             filter_paths.append(new_path)
     return filter_paths
 
+
 def filter_menu_by2(time, setting): # time and location (in this order)
     filter_paths =[]
     ls_book_id = []
@@ -143,5 +144,3 @@ def filter_menu_by2(time, setting): # time and location (in this order)
         book_id = row.id
         ls_book_id.append(book_id)
     return filter_paths, ls_book_id
-
-# filter_menu_by("period_tag", "19th")
