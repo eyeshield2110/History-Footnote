@@ -5,19 +5,19 @@ with urllib.request.urlopen('http://python.org/') as response:
    print(html)
 
 def readBookCover():
-    with open("ref/book_cover.txt") as f:
+    with open("data/book_cover.txt") as f:
         book_covers = [link[:-1] if link[-1] == "\n" else link for link in f.readlines()]
     return book_covers
 
 
 def readTitleAuthor():
-    with open("ref/title_author.txt") as f:
+    with open("data/title_author.txt") as f:
         title_author = [link[:-1] if link[-1] == "\n" else link for link in f.readlines()]
     return title_author
 
 
 def readTitleAuthor_path():
-    with open("ref/title_author.txt") as f:
+    with open("data/title_author.txt") as f:
         title_author = [link[:-1] if link[-1] == "\n" else link for link in f.readlines()]
         for i in range(len(title_author)):
             link_as_list = title_author[i].split(" ")
@@ -30,13 +30,13 @@ def readTitleAuthor_path():
 
 
 def readSummary():
-    with open("ref/summaries.txt") as f:
+    with open("data/summaries.txt") as f:
         summaries = [summary[:-1] if summary[-1] == "\n" else summary for summary in f.readlines()]
     return summaries
 
 
 def readText():
-    with open("ref/integral_texts.txt") as f:
+    with open("data/integral_texts.txt") as f:
         texts = [text[:-1] if text[-1] == "\n" else text for text in f.readlines()]
     return texts
 

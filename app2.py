@@ -1,5 +1,6 @@
 # this app is the first attempt to set up sessions
 # as of 9pm wed apr 15th, it looks like the copy of 06_app from 04_flask_sessions (Denis)
+# DO NOT USE
 
 import sqlite3
 

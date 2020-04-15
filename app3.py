@@ -1,11 +1,53 @@
+# this app is testing the login and registration forms
+# (15 april) add FlaskTest>04_Session>app.py: UserMixin class to manage session
+# (15 april) add database (sqlalchemy)
 import csv
 from flask import Flask, render_template, redirect, url_for, request
 from forms import LoginForm, RegisterForm, BookSuggestionForm
 
 
+# copy from app.py:
+import bcrypt
+from flask import Flask, session, redirect, render_template, flash
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
+import csv
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.fields.html5 import EmailField
+from wtforms.validators import InputRequired, EqualTo, Email, Length, Regexp, ValidationError
+
+
 app = Flask(__name__)
-# setting the app's secret key like this is not secure, but for now it's good enough to make it work
 app.secret_key = 'allo'
+
+# copy from app.py:
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+app.config['USE_SESSION_FOR_NEXT'] = True
+
+
+class User(UserMixin):
+    def __init__(self, username, password=None):
+        self.id = username
+        self.password = password
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    user = find_user(user_id)
+    if user:
+        user.password = None
+    return user
+
+
+def find_user(username):
+    with open('data/(noah)users.csv') as f:
+        for user in csv.reader(f):
+            if user[0] == username:
+                return User(*user)
+    return None
+
 
 
 # dummy home link (delete)

@@ -4,6 +4,7 @@ from flask import Flask, url_for, render_template
 
 from readRef import readBookCover, readTitleAuthor_path, readTitleAuthor, readSummary, readText, readText2
 
+# OLD VERSION, DO NOT USE (SEE app4.py)
 
 
 app = Flask(__name__)
@@ -25,7 +26,7 @@ def active_tab1(x):
     listTitleAuthor = readTitleAuthor()
     listSummaries = readSummary()
     #listTexts = readText()
-    listTexts = ["", "", "", readText2(("ref/DraculaText.html"))]
+    listTexts = ["", "", "", readText2(("data/DraculaText.html"))]
     return render_template("page_base_activeTab1.html", bookCover=listBookCovers[indexBook], title=listTitleAuthor[indexBook], bookSummary=listSummaries[indexBook], integralText=listTexts[indexBook], tab2="/"+x+"/active_tab2", tab3="/"+x+"/active_tab3")
 
 @app.route('/<x>/active_tab2')
