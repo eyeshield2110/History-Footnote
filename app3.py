@@ -1,7 +1,5 @@
 # this app is testing the login and registration forms
 # 15 april (8:30pm) Basic signup and login work
-import csv
-from flask import Flask, render_template, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 
 from forms import LoginForm, RegisterForm, BookSuggestionForm
@@ -10,11 +8,6 @@ from forms import LoginForm, RegisterForm, BookSuggestionForm
 import bcrypt
 from flask import Flask, session, redirect, render_template, flash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
-import csv
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.fields.html5 import EmailField
-from wtforms.validators import InputRequired, EqualTo, Email, Length, Regexp, ValidationError
 
 app = Flask(__name__)
 app.secret_key = '1234'
