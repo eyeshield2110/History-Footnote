@@ -26,4 +26,4 @@ class BookSuggestionForm(FlaskForm):
 class UpdateAvatar(FlaskForm):
     icon = FileField('Choose an image for your account icon',
                      validators=[FileRequired(), FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
-    submit = SubmitField('Register')
+    submit = SubmitField('Upload')
