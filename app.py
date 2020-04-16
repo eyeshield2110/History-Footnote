@@ -8,8 +8,7 @@ from werkzeug.utils import secure_filename
 
 from readRef import readText2
 from create_db2 import Book, Notes, readBookCover, readTitleAuthor_path, \
-    readTitleAuthor, readSummary, filter_menu_by2
-# OLD VERSION, DO NOT USE (SEE app4.py)
+    readTitleAuthor, readSummary #, filter_menu_by2
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -21,7 +20,7 @@ from flask import Flask, session, redirect, render_template, flash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
 
 app = Flask(__name__)
-app.secret_key = 'allo'
+app.secret_key = 'hello'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///books_db2.sqlite3'
@@ -32,8 +31,8 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 app.config['USE_SESSION_FOR_NEXT'] = True
 # set up database
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
 
 
 db = SQLAlchemy(app)
@@ -97,8 +96,9 @@ def home():
                            icon=icon_path)
 
 
-@app.route('/<tag1>/<tag2>')
+# @app.route('/<tag1>/<tag2>')
 def filter(tag1, tag2):
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///books_db2.sqlite3'
     filter_paths, indexes = filter_menu_by2(tag1, tag2)
     list_routes = [url_for("active_tab1", x=filter_paths[i]) for i in range(len(filter_paths))]
     display_by_cover = {listBookCovers[indexes[i] - 1]: list_routes[i - 1] for i in range(len(indexes))}
@@ -164,7 +164,6 @@ def login():
         else:
             flash('Wrong password or username')
             return redirect('/login')
-        return redirect('/')
     return render_template('login.html', form=login_form)
 
 
@@ -289,6 +288,41 @@ def findUser(username):
     else:
         return None
 
+
+# test some Book db handling
+@app.route('/check/<title>')
+def displayBook(title):
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///books_db2.sqlite3'
+    book = Book.query.filter_by(title=title).first()
+    print(book.title + " by " + book.author)
+    return book.title + " by " + book.author
+
+
+@app.route("/<time>/<setting>")
+def filter_menu_by2(time, setting): # time and location (in this order)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///books_db2.sqlite3'
+    filter_paths =[]
+    ls_book_id = []
+    list_routes = [url_for("active_tab1", x=pathByTitleAuthor[i]) for i in range(len(listBookCovers))]
+    # result = db.session.query(Book).filter(Book.period_tag == time).filter(Book.location_tag == setting)
+    result = Book.query.filter_by(location_tag=setting, period_tag=time).all()
+    for row in result:
+        str_path = row.title + " by " + row.author
+        path_as_ls = str_path.split(" ")
+        new_path = ""
+        for e in path_as_ls:
+            new_path += e + "_"
+        new_path = new_path[:-1]
+        filter_paths.append(new_path)
+
+        book_id = row.id
+        ls_book_id.append(book_id)
+    display_covers = {listBookCovers[i-1]: list_routes[i-1] for i in ls_book_id}
+    return render_template("homepage_unfiltered_menu.html", bookList=display_covers, title="History")
+    #return filter_paths, ls_book_id
+
+# def checkFunct():
+#     print(listBookCovers[0])
 
 if __name__ == '__main__':
     app.run()

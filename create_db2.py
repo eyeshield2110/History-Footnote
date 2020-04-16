@@ -129,9 +129,11 @@ def filter_menu_by(tag_type, tag_value):
 
 
 def filter_menu_by2(time, setting): # time and location (in this order)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///books_db2.sqlite3'
     filter_paths =[]
     ls_book_id = []
-    result = db.session.query(Book).filter(Book.period_tag == time).filter(Book.location_tag == setting)
+    # result = db.session.query(Book).filter(Book.period_tag == time).filter(Book.location_tag == setting)
+    result = Book.query.filter_by(period_tag=time).filter_by(location_tag=setting).all()
     for row in result:
         str_path = row.title + " by " + row.author
         path_as_ls = str_path.split(" ")
