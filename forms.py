@@ -19,8 +19,8 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Login')
 
 class BookSuggestionForm(FlaskForm):
-    title = StringField("Title", validators=[InputRequired()])
-    author = StringField("Author", validators=[InputRequired()])
+    title = StringField("Title", validators=[InputRequired(), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0, 'invalid title')])
+    author = StringField("Author", validators=[InputRequired(), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0, 'invalid author')])
     submit = SubmitField("Add to Suggestion List")
 
 class UpdateAvatar(FlaskForm):

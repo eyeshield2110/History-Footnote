@@ -1,3 +1,4 @@
+{% extends "main_menu_base.html" %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,20 +9,35 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="../static/formStyle.css">
     <title>Book suggestion</title>
+    <style>
+        div.form{
+            padding:30px;
+            margin:20px;
+        }
+    </style>
 </head>
 <body>
-<div class="form">
-    <h4>Got a book to suggest?</h4>
-    <label name="title">Title
-        <input name="title" type="text">
-    </label>
-    <br/>
-    <label name="author">Author
-        <input name="author" type="text">
-    </label>
-    <br/>
-    <button type="Submit">Submit suggestion!</button>
-</div>
-
+{% block contents %}
+    <div class="flash">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class=flashes>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+    <div class="form">
+        <h4>Got a book to suggest?</h4>
+        <form action="/book_suggest" method="post">
+            {{ form.csrf_token }}
+            {{ form.title.label }}<br/>{{ form.title }}<br/>
+            {{ form.author.label }}<br/>{{ form.author }}<br/>
+            {{ form.submit }}
+        </form>
+    </div>
+{% endblock %}
 </body>
 </html>

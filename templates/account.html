@@ -1,4 +1,5 @@
 {% extends "main_menu_base.html" %}
+<
 
 {% block contents %}
     <div class="flash">
@@ -20,7 +21,7 @@
     <div id="update_profile_pic">
         <form action="/account" method="post" enctype='multipart/form-data' height="50px">
         {{ form.csrf_token }}<br/>
-        {{ form.icon.label }}{{ form.icon }}<br/>
+        {{ form.icon.label }}{{ form.icon }}<br/><br/>
         {{ form.submit }}
         </form>
     </div>

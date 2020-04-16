@@ -47,6 +47,11 @@ class User(db.Model):
     icon = db.Column(db.String)
 
 
+class Book_suggestion(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String)
+    author = db.Column(db.String)
+
 # do not add email to userMixin, i think thats what fuck up last time
 class User_session(UserMixin):
     def __init__(self, username, password=None):
@@ -129,6 +134,7 @@ def active_tab3(x):
 
 @app.route('/archive')
 def archive():
+    ls_book_sg = Book_suggestion.query.all()
     icon_path = ""
     user = findUser(session.get('username'))
     if user is not None:
@@ -137,13 +143,9 @@ def archive():
     else:
         icon_path = ""
     users = User.query.all()
-    # for user in users:
-    #     if user.icon == None:
-    #         user.icon = "icons8-user-100.png"
     return render_template("archive.html", title="History Footnote: Archive", users=users,
                            username=session.get('username'),
-                           icon=icon_path
-                           )
+                           icon=icon_path, books=ls_book_sg)
 
 
 @app.route('/about')
@@ -219,6 +221,31 @@ def account():
         icon_path = ""
     return render_template('account.html', form=form1, username=username, email=findUser(username).email
                            , icon=icon_path )
+
+@app.route('/book_suggest', methods=['GET', 'POST'])
+@login_required
+def book_suggest():
+    icon_path = ""
+    user = findUser(session.get('username'))
+    if user is not None:
+        if user.icon is not None:
+            icon_path = user.icon
+    else:
+        icon_path = ""
+    form = BookSuggestionForm()
+    if form.validate_on_submit():
+        print("validate")
+        new_book = Book_suggestion(title=form.title.data, author=form.author.data)
+        db.session.add(new_book)
+        db.session.commit()
+        print("add to db")
+        flash('Book suggestion added to list!')
+        return redirect('/book_suggest')
+    elif form.title.data is None or form.author.data is None:
+        flash('You need to add a title/author')
+    return render_template('Book_suggestion_form.html', form=form,
+                           username=session.get('username'), icon=icon_path)
+
 
 @app.route('/logout')
 @login_required

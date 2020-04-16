@@ -21,7 +21,7 @@
     <h4>List of books suggested by users to add to database!:</h4>
     <ol>
     {% for book in books %}
-        <li>book.title by book.author</li>
+        <li>{{ book.title }} by {{ book.author }}</li>
     {% endfor %}
     </ol>
 {% endblock %}
