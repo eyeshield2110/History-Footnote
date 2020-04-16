@@ -138,15 +138,9 @@ def archive():
     ls_book_sg = Book_suggestion.query.all()
     icon_path = ""
     user = findUser(session.get('username'))
-    if user is not None:
-        if user.icon is not None:
-            icon_path = user.icon
-    else:
-        icon_path = ""
     users = User.query.all()
     return render_template("archive.html", title="History Footnote: Archive", users=users,
-                           username=session.get('username'),
-                           icon=icon_path, books=ls_book_sg)
+                           username=session.get('username'), books=ls_book_sg)
 
 
 @app.route('/about')
@@ -169,6 +163,7 @@ def login():
             return redirect(next_page)
         else:
             flash('Wrong password or username')
+            return redirect('/login')
         return redirect('/')
     return render_template('login.html', form=login_form)
 
@@ -177,7 +172,7 @@ def login():
 @app.route('/confirm')
 @login_required # ??
 def login_confirm():
-    return "user added to db"
+    return render_template("confirm.html")
 
 
 # this register/login appears when clicking on connection button on main menu

@@ -14,7 +14,11 @@
             <tr>
                 <td>Username: {{ user.username }}</td>
                 <td>Email: {{ user.email }}</td>
-                <td>Avatar: <img src="static/{{ user.icon }}" width="50px"></td>
+                {% if user.icon %}
+                    <td>Avatar: <img src="static/{{ user.icon }}" width="50px"></td>
+                {% else %}
+                    <td>Avatar: <img src="static/icons8-user-100.png" width="50px"></td>
+                {% endif %}
             </tr>
         {% endfor %}
     </table>
