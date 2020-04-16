@@ -78,6 +78,7 @@ listSummaries = readSummary()
 
 @app.route('/')
 def home():
+    icon_path = ""
     user = findUser(session.get('username'))
     if user is not None:
         if user.icon is not None:
@@ -128,11 +129,21 @@ def active_tab3(x):
 
 @app.route('/archive')
 def archive():
+    icon_path = ""
+    user = findUser(session.get('username'))
+    if user is not None:
+        if user.icon is not None:
+            icon_path = user.icon
+    else:
+        icon_path = ""
     users = User.query.all()
-    for user in users:
-        if user.icon == None:
-            user.icon = "icons8-user-100.png"
-    return render_template("archive.html", title="History Footnote: Archive", users=users)
+    # for user in users:
+    #     if user.icon == None:
+    #         user.icon = "icons8-user-100.png"
+    return render_template("archive.html", title="History Footnote: Archive", users=users,
+                           username=session.get('username'),
+                           icon=icon_path
+                           )
 
 
 @app.route('/about')
@@ -199,7 +210,15 @@ def account():
         db.session.commit()
         flash('Profile image updated for {}'.format(session.get('username')))
     username = session.get('username')
-    return render_template('account.html', form=form1, username=username, email=findUser(username).email)
+    icon_path = ""
+    user = findUser(username)
+    if user is not None:
+        if user.icon is not None:
+            icon_path = user.icon
+    else:
+        icon_path = ""
+    return render_template('account.html', form=form1, username=username, email=findUser(username).email
+                           , icon=icon_path )
 
 @app.route('/logout')
 @login_required
