@@ -79,8 +79,9 @@ listSummaries = readSummary()
 @app.route('/')
 def home():
     user = findUser(session.get('username'))
-    if user.icon is not None:
-        icon_path = user.icon
+    if user is not None:
+        if user.icon is not None:
+            icon_path = user.icon
     else:
         icon_path = ""
     list_routes = [url_for("active_tab1", x=pathByTitleAuthor[i]) for i in range(len(listBookCovers))]
