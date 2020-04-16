@@ -41,16 +41,18 @@ def readText():
     return texts
 
 def readText2(file):
-    if file == "":
-        return "text not available :)"
-    with open(file) as f:
-        texts = [text[:-1] if text[-1] == "\n" else text for text in f.readlines()]
-        text_without_empty = []
-        for line in texts:
-            if line!="":
-                text_without_empty.append(line)
-
-    return text_without_empty
+    try:
+        with open(file) as f:
+            texts = [text[:-1] if text[-1] == "\n" else text for text in f.readlines()]
+            text_without_empty = []
+            for line in texts:
+                if line != "":
+                    text_without_empty.append(line)
+        return text_without_empty
+    except IOError:
+        return """Text unavailable
+        
+        """
 
 
 

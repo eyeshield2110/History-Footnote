@@ -106,9 +106,13 @@
                     <div class="col-12">
                         <p>
                             {% block integralText %}
-                                {% for line in integralText %}
-                                    <p>{{ line|safe }}</p>
-                                {% endfor %}
+                                {% if integralText is not string %}
+                                    {% for line in integralText %}
+                                        <p>{{ line|safe }}</p>
+                                    {% endfor %}
+                                {% else %}
+                                    {{ integralText }}
+                                {% endif %}
                             {% endblock %}
                         </p>
                     </div>

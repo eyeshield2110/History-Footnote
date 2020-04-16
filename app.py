@@ -110,10 +110,10 @@ def filter(tag1, tag2):
 def active_tab1(x):
     indexBook = pathByTitleAuthor.index(x)
     listTexts = ["", "", "", readText2(("data/Dracula_by_Bram_Stoker.html"))]
-    #listTexts = [readText2()]
+    text = readText2("data/" + x + ".html")
     return render_template("page_base_activeTab1.html", bookCover=listBookCovers[indexBook],
                            title=listTitleAuthor[indexBook], bookSummary=listSummaries[indexBook],
-                           integralText=listTexts[indexBook], tab2="/" + x + "/active_tab2",
+                           integralText=text, tab2="/" + x + "/active_tab2",
                            tab3="/" + x + "/active_tab3")
 
 
