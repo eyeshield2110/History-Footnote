@@ -97,50 +97,83 @@ def home():
 
 
 # @app.route('/<tag1>/<tag2>')
-def filter(tag1, tag2):
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///books_db2.sqlite3'
-    filter_paths, indexes = filter_menu_by2(tag1, tag2)
-    list_routes = [url_for("active_tab1", x=filter_paths[i]) for i in range(len(filter_paths))]
-    display_by_cover = {listBookCovers[indexes[i] - 1]: list_routes[i - 1] for i in range(len(indexes))}
-    return render_template("homepage_unfiltered_menu.html", title="History Footnote: Home",
-                           bookList=display_by_cover)
+# def filter(tag1, tag2):
+#     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///books_db2.sqlite3'
+#     filter_paths, indexes = filter_menu_by2(tag1, tag2)
+#     list_routes = [url_for("active_tab1", x=filter_paths[i]) for i in range(len(filter_paths))]
+#     display_by_cover = {listBookCovers[indexes[i] - 1]: list_routes[i - 1] for i in range(len(indexes))}
+#     return render_template("homepage_unfiltered_menu.html", title="History Footnote: Home",
+#                            bookList=display_by_cover)
 
 
 @app.route('/<x>/active_tab1/')
 def active_tab1(x):
+    icon_path = ""
+    user = findUser(session.get('username'))
+    if user is not None:
+        if user.icon is not None:
+            icon_path = user.icon
+    else:
+        icon_path = ""
     indexBook = pathByTitleAuthor.index(x)
     listTexts = ["", "", "", readText2(("data/Dracula_by_Bram_Stoker.html"))]
     text = readText2("data/" + x + ".html")
     return render_template("page_base_activeTab1.html", bookCover=listBookCovers[indexBook],
                            title=listTitleAuthor[indexBook], bookSummary=listSummaries[indexBook],
                            integralText=text, tab2="/" + x + "/active_tab2",
-                           tab3="/" + x + "/active_tab3")
+                           tab3="/" + x + "/active_tab3", username=session.get('username'),
+                           icon=icon_path)
 
 
 @app.route('/<x>/active_tab2')
 def active_tab2(x):
+    icon_path = ""
+    user = findUser(session.get('username'))
+    if user is not None:
+        if user.icon is not None:
+            icon_path = user.icon
+    else:
+        icon_path = ""
     indexBook = pathByTitleAuthor.index(x)
     return render_template("page_activeTab2.html", bookCover=listBookCovers[indexBook],
                            title=listTitleAuthor[indexBook], bookSummary=listSummaries[indexBook],
-                           tab3="/" + x + "/active_tab3", tab1="/" + x + "/active_tab1")
+                           tab3="/" + x + "/active_tab3", tab1="/" + x + "/active_tab1",
+                           username=session.get('username'),
+                           icon=icon_path)
 
 
 @app.route('/<x>/active_tab3')
 def active_tab3(x):
+    icon_path = ""
+    user = findUser(session.get('username'))
+    if user is not None:
+        if user.icon is not None:
+            icon_path = user.icon
+    else:
+        icon_path = ""
     indexBook = pathByTitleAuthor.index(x)
     return render_template("page_activeTab3.html", bookCover=listBookCovers[indexBook],
                            title=listTitleAuthor[indexBook], bookSummary=listSummaries[indexBook],
-                           tab1="/" + x + "/active_tab1", tab2="/" + x + "/active_tab2")
+                           tab1="/" + x + "/active_tab1", tab2="/" + x + "/active_tab2",
+                           username=session.get('username'),
+                           icon=icon_path)
 
 
 @app.route('/archive')
 def archive():
-    ls_book_sg = Book_suggestion.query.all()
     icon_path = ""
     user = findUser(session.get('username'))
+    if user is not None:
+        if user.icon is not None:
+            icon_path = user.icon
+    else:
+        icon_path = ""
+
+    ls_book_sg = Book_suggestion.query.all()
     users = User.query.all()
     return render_template("archive.html", title="History Footnote: Archive", users=users,
-                           username=session.get('username'), books=ls_book_sg)
+                           username=session.get('username'), books=ls_book_sg,
+                           icon=icon_path)
 
 
 @app.route('/about')
@@ -321,8 +354,6 @@ def filter_menu_by2(time, setting): # time and location (in this order)
     return render_template("homepage_unfiltered_menu.html", bookList=display_covers, title="History")
     #return filter_paths, ls_book_id
 
-# def checkFunct():
-#     print(listBookCovers[0])
 
 if __name__ == '__main__':
     app.run()
