@@ -351,8 +351,15 @@ def filter_menu_by2(time, setting): # time and location (in this order)
         book_id = row.id
         ls_book_id.append(book_id)
     display_covers = {listBookCovers[i-1]: list_routes[i-1] for i in ls_book_id}
-    return render_template("homepage_unfiltered_menu.html", bookList=display_covers, title="History")
-    #return filter_paths, ls_book_id
+
+    icon_path = ""
+    user = findUser(session.get('username'))
+    if user is not None:
+        if user.icon is not None:
+            icon_path = user.icon
+    else:
+        icon_path = ""
+    return render_template("homepage_unfiltered_menu.html", bookList=display_covers, title="History", icon=icon_path, username=session.get('username') )
 
 
 if __name__ == '__main__':
