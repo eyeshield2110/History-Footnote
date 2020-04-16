@@ -2,25 +2,39 @@
 # OLD VERSION, DO NOT USE (SEE app4.py)
 # (15 apr) 11:15pm This app is the updated version (copy from app4)
 import os
-
-from flask import Flask, url_for, render_template
+from flask_mail import Mail, Message
 from werkzeug.utils import secure_filename
 
 from readRef import readText2
 from create_db2 import Book, Notes, readBookCover, readTitleAuthor_path, \
-    readTitleAuthor, readSummary #, filter_menu_by2
+    readTitleAuthor, readSummary
 
 from flask_sqlalchemy import SQLAlchemy
 
 from forms import LoginForm, RegisterForm, BookSuggestionForm, UpdateAvatar
 
-# copy from app.py:
 import bcrypt
-from flask import Flask, session, redirect, render_template, flash
+from flask import Flask, session, redirect, render_template, flash, url_for
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
+
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 
 app = Flask(__name__)
 app.secret_key = 'hello'
+
+app.config.update(
+    MAIL_SERVER='smtp.gmail.com',
+    MAIL_USERNAME='noe.dinh@gmail.com',
+    MAIL_PASSWORD='ilovemuse',
+    MAIL_PORT=587,
+    # MAIL_US_SSL=True,
+    MAIL_USE_TLS=True
+)
+
+# setting mail service
+mail = Mail(app)
+serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+salt1 = 'email-confirm'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///books_db2.sqlite3'
@@ -33,7 +47,6 @@ app.config['USE_SESSION_FOR_NEXT'] = True
 # set up database
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
-
 
 db = SQLAlchemy(app)
 
@@ -200,11 +213,11 @@ def login():
     return render_template('login.html', form=login_form)
 
 
-# confirmation page: to write
-@app.route('/confirm')
-@login_required # ??
-def login_confirm():
-    return render_template("confirm.html")
+# # confirmation page: to write
+# @app.route('/confirm')
+# @login_required # ??
+# def login_confirm():
+#     return render_template("confirm.html")
 
 
 # this register/login appears when clicking on connection button on main menu
@@ -214,14 +227,30 @@ def signup():
     if register_form.validate_on_submit():
         user = find_user(register_form.username.data)
         if not user:
-            salt = bcrypt.gensalt()
-            encrypt_pw = bcrypt.hashpw(register_form.password.data.encode(), salt)
+            salt2 = bcrypt.gensalt()
+            encrypt_pw = bcrypt.hashpw(register_form.password.data.encode(), salt2)
             new_user = User(username=register_form.username.data, email=register_form.email.data,
                             password=encrypt_pw.decode())
             db.session.add(new_user)
             db.session.commit()
-            flash('Check email for link to confirm registration.')
-            return redirect("/confirm")
+
+            email = register_form.email.data
+            token = serializer.dumps(email, salt=salt1)
+            msg = Message('Welcome email from History Footnote', sender="noe.dinh@gmail.com", recipients=[email])
+            link = url_for('confirm', token=token, _external=True)
+            msg.html = '''
+                        <!DOCTYPE html>
+                        <html>
+                        <body>
+                            <h1>Welcome to the website!</h1>
+                            <h2>Please click in the following link to login your account:</h2>
+                            <a href={}>Login</a>
+                            <p>(note that his link will expire within one hour)</p>
+                        </body>
+                        </html>
+                            '''.format(link)
+            mail.send(msg)
+            return 'Confirmation email sent. Click on the link sent in email to confirm registration within 1h.'
         else:
             flash('Username already taken. Chose another one.')
     return render_template("signup.html", form=register_form)
@@ -249,6 +278,7 @@ def account():
         icon_path = ""
     return render_template('account.html', form=form1, username=username, email=findUser(username).email
                            , icon=icon_path )
+
 
 @app.route('/book_suggest', methods=['GET', 'POST'])
 @login_required
@@ -332,7 +362,7 @@ def displayBook(title):
 
 
 @app.route("/<time>/<setting>")
-def filter_menu_by2(time, setting): # time and location (in this order)
+def filter_menu_by2(time, setting):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///books_db2.sqlite3'
     filter_paths =[]
     ls_book_id = []
@@ -360,6 +390,42 @@ def filter_menu_by2(time, setting): # time and location (in this order)
     else:
         icon_path = ""
     return render_template("homepage_unfiltered_menu.html", bookList=display_covers, title="History", icon=icon_path, username=session.get('username') )
+
+
+# attempt to set up an email sending route
+# @app.route('/<email>', methods=['GET', 'POST'])
+def index1(email):
+    token = serializer.dumps(email, salt=salt)
+    msg = Message('Welcome email from History Footnote', sender="noe.dinh@gmail.com", recipients=[email])
+    link = url_for('confirm', token=token, _external=True)
+    msg.html = '''
+            <!DOCTYPE html>
+            <html>
+            <body>
+                <h1>Welcome to the website!</h1>
+                <h2>Please click in the following link to login your account:</h2>
+                <a href={}>Login</a>
+                <p>(note that his link will expire within one hour)</p>
+            </body>
+            </html>
+                '''.format(link)
+    mail.send(msg)
+    return 'Confirmation email sent. Click on the link sent in email to confirm registration within 1h.'
+
+
+# in the following route, user will be add to database and is directed to login page -> home page
+# alternatively: use email service to help reset forgotten password
+@app.route('/confirm_email/<token>')
+def confirm(token):
+    try:
+        email = serializer.loads(token, salt=salt1, max_age=3600)
+    except SignatureExpired:
+        return 'The link is expired.'
+    flash("New user added to website database!")
+    return redirect('/login')
+
+
+
 
 
 if __name__ == '__main__':
