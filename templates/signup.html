@@ -31,44 +31,20 @@
             {% endfor %}
         {% endfor %}
     </ul>
-
-</div>
-<div id="login_err">
-    {% else %}
-    {% if form2.errors %}
-        <ul class="errors">
-            {% for field_name, field_errors in form.errors|dictsort if field_errors %}
-                {% for error in field_errors %}
-                    <li>{{ form2[field_name].label }}: {{ error }}</li>
-                {% endfor %}
-            {% endfor %}
-        </ul>
     {% endif %}
-{% endif %}
 </div>
-
 <div id="register" class="form">
-    <form action="/Connection" method="post">
+    <form action="/signup" method="post">
         {{ form.csrf_token }}
         <h4>Registration</h4>
         {{ form.username.label }}{{ form.username }}<br/>
         {{ form.email.label }}{{ form.email }}<br/>
         {{ form.password.label }}{{ form.password }}<br/>
-        {{ form.password2.label }}{{ form.password2 }}<br/>
+        {{ form.password2.label }} {{ form.password2 }}<br/>
         {{ form.submit }}
     </form>
 </div>
 
-<div id="login" class="form">
-    <form action="/Connection" method="post">
-        {{ form2.csrf_token }}
-        <h4>Already registered?</h4>
-        <h4>Login</h4>
-        {{ form2.username.label }}{{ form2.username }}<br/>
-        {{ form2.password.label }}{{ form2.password }}<br/>
-        {{ form2.submit }}
-    </form>
-</div>
 
 </body>
 </html>

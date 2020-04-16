@@ -1,10 +1,8 @@
 # this app is testing the login and registration forms
-# (15 april) add FlaskTest>04_Session>app.py: UserMixin class to manage session
-# (15 april) add database (sqlalchemy)
+# 15 april (8:30pm) Basic signup and login work
 import csv
 from flask import Flask, render_template, redirect, url_for, request
 from forms import LoginForm, RegisterForm, BookSuggestionForm
-
 
 # copy from app.py:
 import bcrypt
@@ -16,9 +14,8 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import InputRequired, EqualTo, Email, Length, Regexp, ValidationError
 
-
 app = Flask(__name__)
-app.secret_key = 'allo'
+app.secret_key = '1234'
 
 # copy from app.py:
 login_manager = LoginManager()
@@ -42,44 +39,86 @@ def load_user(user_id):
 
 
 def find_user(username):
-    with open('data/(noah)users.csv') as f:
+    with open('data/users.csv') as f:
         for user in csv.reader(f):
             if user[0] == username:
                 return User(*user)
     return None
 
 
-
 # dummy home link (delete)
 @app.route("/")
 def home():
-    return "<h1>Dummy home page</h1>"
+    return render_template('(noah)home.html', username= session.get('username'))
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    login_form = LoginForm()
+    if login_form.validate_on_submit():
+        user = find_user(login_form.username.data)
+        if user and bcrypt.checkpw(login_form.password.data.encode(), user.password.encode()):
+            login_user(user)
+            flash('Logged in successfully.')
+            session['username'] = user.id
+            next_page = session.get('next', '/')
+            session['next'] = '/'
+            return redirect(next_page)
+        else:
+            flash('Wrong password or username')
+        return redirect('/')
+    return render_template('login.html', form=login_form)
 
 
 # this register/login appears when clicking on connection button on main menu
-@app.route("/Connection", methods=["GET", "POST"])
-def connection():
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
     register_form = RegisterForm()
-    login_form = LoginForm()
     if register_form.validate_on_submit():
-        # here, need to check if registration matches an already existing email/write a function
-        # if all is well, send a confirmation email
-        return redirect("/registration_redirect", register_form=register_form)
-    elif login_form.validate_on_submit():
-        return redirect('/')
-    # to this return, add empty field that needs to be fill to get redirect page
-    return render_template("Register|Login_form.html", form=register_form, form2=login_form)
+        user = find_user(register_form.username.data)
+        if not user:
+            salt = bcrypt.gensalt()
+            encrypt_pw = bcrypt.hashpw(register_form.password.data.encode(), salt)
+            with open('data/users.csv', 'a') as f:
+                writer = csv.writer(f)
+                writer.writerow([register_form.username.data, encrypt_pw.decode()])
+            flash('Successful registration. Check email for confirmation link.')
+            return redirect(url_for("login"))
+        else:
+            flash('Username already taken. Chose another one.')
+    return render_template("signup.html", form=register_form)
 
 
-@app.route("/registration_redirect")
-def registration_redirect(register_form):
-    return render_template("registration_redirect.html", form=register_form)
-# this login page only appears after clicking on email confirmation message
+@app.route('/logout')
+@login_required
+def logout():
+    session.clear()
+    # following line does not work, unless i clear session...
+    logout_user()
+    return redirect('/')
 
 
-@app.route("/Login")
-def email_confirmed():
-    return render_template("Login_form.html")
+@app.route('/private1')
+@login_required
+def private1():
+    return "<h1>This is a private page. </h1> The user " + session.get('username') + " has access."
+
+
+@app.route('/private2')
+@login_required
+def private2():
+    return "<h1>This is a second private page. </h1> The user " + session.get('username') + " has access."
+
+
+@app.route('/private3')
+@login_required
+def private3():
+    return "<h1>This is a third page. </h1> The user " + session.get('username') + " has access."
+
+
+@app.route('/public')
+def public():
+    return "<h1>This is a public page with nothing to show... </h1>"
 
 
 if __name__ == '__main__':
