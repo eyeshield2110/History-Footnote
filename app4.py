@@ -31,6 +31,7 @@ def home():
     return render_template("homepage_unfiltered_menu.html", title="History Footnote: Home",
                            bookList=display_by_cover)
 
+
 @app.route('/<tag1>/<tag2>')
 def filter(tag1, tag2):
     filter_paths, indexes = filter_menu_by2(tag1, tag2)
@@ -38,6 +39,7 @@ def filter(tag1, tag2):
     display_by_cover = {listBookCovers[indexes[i]-1]: list_routes[i-1] for i in range(len(indexes))}
     return render_template("homepage_unfiltered_menu.html", title="History Footnote: Home",
                            bookList=display_by_cover)
+
 
 @app.route('/<x>/active_tab1/')
 def active_tab1(x):
