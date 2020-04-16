@@ -1,11 +1,9 @@
-# this app is a copy of app(1)
+# this app is a copy of app(1); app4 is as of now the most recent version of this project
 # (1) Database for books
-from flask import Flask, url_for, render_template
 
 from readRef import readText, readText2
 
 # from create_db2 module
-import sqlite3
 from flask import Flask, render_template, redirect, flash, url_for
 from flask_sqlalchemy import SQLAlchemy
 from create_db2 import Book, Notes, readBookCover, readTitleAuthor_path, \
