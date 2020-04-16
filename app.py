@@ -1,12 +1,12 @@
 # this app is from A2
 # OLD VERSION, DO NOT USE (SEE app4.py)
 # (15 apr) 11:15pm This app is the updated version (copy from app4)
-
+from create_db2 import db
 from flask import Flask, url_for, render_template
 
 from readRef import readText2
 from create_db2 import Book, Notes, readBookCover, readTitleAuthor_path, \
-    readTitleAuthor, readSummary, filter_menu_by2
+    readTitleAuthor, readSummary #, filter_menu_by2
 # OLD VERSION, DO NOT USE (SEE app4.py)
 
 from flask_sqlalchemy import SQLAlchemy
@@ -32,6 +32,7 @@ app.config['USE_SESSION_FOR_NEXT'] = True
 # set up database
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
+
 
 db = SQLAlchemy(app)
 
@@ -227,6 +228,23 @@ def findUser(username):
     else:
         return None
 
+# some method to manip the Book table
+def filter_menu_by2(time, setting): # time and location (in this order)
+    filter_paths =[]
+    ls_book_id = []
+    result = db.session.query(Book).filter(Book.period_tag == time).filter(Book.location_tag == setting)
+    for row in result:
+        str_path = row.title + " by " + row.author
+        path_as_ls = str_path.split(" ")
+        new_path = ""
+        for e in path_as_ls:
+            new_path += e + "_"
+        new_path = new_path[:-1]
+        filter_paths.append(new_path)
+
+        book_id = row.id
+        ls_book_id.append(book_id)
+    return filter_paths, ls_book_id
 
 if __name__ == '__main__':
     app.run()
