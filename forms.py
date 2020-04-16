@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from flask_wtf.file import FileRequired, FileAllowed
+from wtforms import StringField, PasswordField, SubmitField, FileField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import InputRequired, EqualTo, Email, Length, Regexp, ValidationError
 
@@ -21,3 +22,8 @@ class BookSuggestionForm(FlaskForm):
     title = StringField("Title", validators=[InputRequired()])
     author = StringField("Author", validators=[InputRequired()])
     submit = SubmitField("Add to Suggestion List")
+
+class UpdateAvatar(FlaskForm):
+    icon = FileField('Choose an image for your account icon',
+                     validators=[FileRequired(), FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
+    submit = SubmitField('Register')

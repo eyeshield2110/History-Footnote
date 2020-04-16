@@ -1,17 +1,19 @@
 # this app is from A2
 # OLD VERSION, DO NOT USE (SEE app4.py)
 # (15 apr) 11:15pm This app is the updated version (copy from app4)
-from create_db2 import db
+import os
+
 from flask import Flask, url_for, render_template
+from werkzeug.utils import secure_filename
 
 from readRef import readText2
 from create_db2 import Book, Notes, readBookCover, readTitleAuthor_path, \
-    readTitleAuthor, readSummary #, filter_menu_by2
+    readTitleAuthor, readSummary, filter_menu_by2
 # OLD VERSION, DO NOT USE (SEE app4.py)
 
 from flask_sqlalchemy import SQLAlchemy
 
-from forms import LoginForm, RegisterForm, BookSuggestionForm
+from forms import LoginForm, RegisterForm, BookSuggestionForm, UpdateAvatar
 
 # copy from app.py:
 import bcrypt
@@ -77,12 +79,15 @@ listSummaries = readSummary()
 @app.route('/')
 def home():
     user = findUser(session.get('username'))
-    #print(user.icon)
+    if user.icon is not None:
+        icon_path = user.icon
+    else:
+        icon_path = ""
     list_routes = [url_for("active_tab1", x=pathByTitleAuthor[i]) for i in range(len(listBookCovers))]
     display_by_cover = {listBookCovers[i]: list_routes[i] for i in range(len(listBookCovers))}
     return render_template("homepage_unfiltered_menu.html", title="History Footnote: Home",
                            bookList=display_by_cover, username=session.get('username'),
-                           icon="")
+                           icon=icon_path)
 
 
 @app.route('/<tag1>/<tag2>')
@@ -122,7 +127,11 @@ def active_tab3(x):
 
 @app.route('/archive')
 def archive():
-    return render_template("archive.html", title="History Footnote: Archive")
+    users = User.query.all()
+    for user in users:
+        if user.icon == None:
+            user.icon = "icons8-user-100.png"
+    return render_template("archive.html", title="History Footnote: Archive", users=users)
 
 
 @app.route('/about')
@@ -176,11 +185,20 @@ def signup():
     return render_template("signup.html", form=register_form)
 
 
-@app.route('/account')
+@app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
+    form1 = UpdateAvatar()
+    if form1.validate_on_submit():
+        f = form1.icon.data  # saves image in 'f'
+        filename = secure_filename(f.filename)  # save image name in 'filename'
+        f.save(os.path.join('static', filename))
+        user = findUser(session.get('username'))
+        user.icon = filename
+        db.session.commit()
+        flash('Profile image updated for {}'.format(session.get('username')))
     username = session.get('username')
-    return render_template('account.html', username=username, email=findUser(username).email)
+    return render_template('account.html', form=form1, username=username, email=findUser(username).email)
 
 @app.route('/logout')
 @login_required
@@ -228,23 +246,6 @@ def findUser(username):
     else:
         return None
 
-# some method to manip the Book table
-def filter_menu_by2(time, setting): # time and location (in this order)
-    filter_paths =[]
-    ls_book_id = []
-    result = db.session.query(Book).filter(Book.period_tag == time).filter(Book.location_tag == setting)
-    for row in result:
-        str_path = row.title + " by " + row.author
-        path_as_ls = str_path.split(" ")
-        new_path = ""
-        for e in path_as_ls:
-            new_path += e + "_"
-        new_path = new_path[:-1]
-        filter_paths.append(new_path)
-
-        book_id = row.id
-        ls_book_id.append(book_id)
-    return filter_paths, ls_book_id
 
 if __name__ == '__main__':
     app.run()

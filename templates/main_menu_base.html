@@ -27,6 +27,10 @@
             div.profile{
                 float: right;
             }
+            div.profile{
+                float: right;
+            }
+
         </style>
     {% endblock %}
 </head>
@@ -37,10 +41,10 @@
     <div class="profile">
     {% if username %}
         {% if icon %}
-            <img id="profile_pic" src="{{ icon }}">
+            <img id="profile_pic" src="/static/{{ icon }}" width="50px">
             <h3>Welcome {{ username }}!</h3>
         {% else %}
-            <img id="profile_pic" src="/static/icons8-user-100.png">
+            <img id="profile_pic" src="/static/icons8-user-100.png" width="50px">
             <h3>Welcome {{ username }}!</h3>
         {% endif %}
     {% else  %}

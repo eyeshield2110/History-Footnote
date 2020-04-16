@@ -7,4 +7,21 @@
         <li><a href="#">www.anotherlink.com</a></li>
         <li><a href="#">www.fakelink.com</a></li>
     </ul>
+
+    <table border="1">
+        <label>Table showing current users in database:</label>
+        {% for user in users %}
+            <tr>
+                <td>Username: {{ user.username }}</td>
+                <td>Email: {{ user.email }}</td>
+                <td>Avatar: <img src="static/{{ user.icon }}" width="50px"></td>
+            </tr>
+        {% endfor %}
+    </table>
+    <h4>List of books suggested by users to add to database!:</h4>
+    <ol>
+    {% for book in books %}
+        <li>book.title by book.author</li>
+    {% endfor %}
+    </ol>
 {% endblock %}

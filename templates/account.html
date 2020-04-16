@@ -1,13 +1,32 @@
 {% extends "main_menu_base.html" %}
 
 {% block contents %}
-    <div class="account_profile">
-        <div class="profile_picture">
+    <div class="flash"
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class=flashes>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    </div>
 
-        </div>
+    <div class="account_profile">
     <h3>Username: </h3>{{ username }}<br/>
     <h3>Email: </h3>{{ email }}<br/>
-
-
     </div>
+    <div id="update_profile_pic">
+        <form action="/account" method="post" enctype='multipart/form-data' height="50px">
+        {{ form.csrf_token }}<br/>
+        {{ form.icon.label }}{{ form.icon }}<br/>
+        {{ form.submit }}
+        </form>
+    </div>
+    {#<div id="suggest_book"></div>
+        <form action="/account" method="post">
+
+        </form>
+    </div>#}
 {% endblock %}
