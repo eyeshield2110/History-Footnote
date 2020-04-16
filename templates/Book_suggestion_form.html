@@ -34,8 +34,9 @@
         <form action="/book_suggest" method="post">
             {{ form.csrf_token }}
             {{ form.title.label }}<br/>{{ form.title }}<br/>
-            {{ form.author.label }}<br/>{{ form.author }}<br/>
+            {{ form.author.label }}<br/>{{ form.author }}<br/><br/>
             {{ form.submit }}
+            <br/>
         </form>
     </div>
 {% endblock %}
