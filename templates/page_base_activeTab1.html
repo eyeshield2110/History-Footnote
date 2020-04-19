@@ -125,6 +125,10 @@
                 display: block;
                 transition: 0.3s;
             }
+            /*(noah) add padding to table of content*/
+            .sidebar{
+                padding: 8px;
+            }
 
             /* When you mouse over the navigation links, change their color */
             .sidebar a:hover {
@@ -196,8 +200,6 @@
         <div id="mySidebar" class="sidebar">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             <a href="#integral-text">Top</a>
-            <a href="#">one</a>
-            <a href="#">two</a>
             {% for chapter in listContent %}
                 <a href="#"></a> {# ...... #}
             {% endfor %}
