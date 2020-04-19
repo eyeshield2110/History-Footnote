@@ -120,30 +120,30 @@
             .sidebar .closebtn {
                 position: absolute;
                 top: 0;
-                right: 25px;
+                left: 25px;
                 font-size: 36px;
                 margin-left: 50px;
             }
 
             /* The button used to open the sidebar */
             .openbtn {
-                font-size: 20px;
+                {#font-size: 20px;
                 cursor: pointer;
                 background-color: #9fbbbb;
                 color: white;
                 padding: 10px 15px;
-                border: none;
+                border: none;#}
             }
 
             .openbtn:hover {
-                background-color: #444;
+                {#background-color: #444;#}
             }
 
             /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
-            #main {
-                transition: margin-left .5s; /* If you want a transition effect */
+            {##main {
+                transition: margin-right .5s; /* If you want a transition effect */
                 padding: 20px;
-            }
+            }#}
 
             /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
             @media screen and (max-height: 450px) {
@@ -233,9 +233,12 @@
         </div>
 
 
-        <div id="main" class="container-fluid row book-reader col-sm-8">
-        <button class="openbtn" onclick="openNav()">&#9776; Open Sidebar</button>
+        <div class="container-fluid row book-reader col-sm-8"> {# id=main #}
+        {# <button class="openbtn" onclick="openNav()">&#9776; Open Sidebar</button>#}
             <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link openbtn" onclick="openNav()" href="#">Show Content Table</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link {% block activeLink1 %}active{% endblock %}"
                        href="{% block link1 %}#{% endblock %}">Integral text</a>
