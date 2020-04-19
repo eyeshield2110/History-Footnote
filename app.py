@@ -11,7 +11,7 @@ from create_db2 import Book, Notes, readBookCover, readTitleAuthor_path, \
 
 from flask_sqlalchemy import SQLAlchemy
 
-from forms import LoginForm, RegisterForm, BookSuggestionForm, UpdateAvatar
+from forms import LoginForm, RegisterForm, BookSuggestionForm, UpdateAvatar, ForgotPassword, ResetPassword
 
 import bcrypt
 from flask import Flask, session, redirect, render_template, flash, url_for
@@ -398,7 +398,7 @@ def filter_menu_by2(time, setting):
 # attempt to set up an email sending route
 # @app.route('/<email>', methods=['GET', 'POST'])
 def index1(email):
-    token = serializer.dumps(email, salt=salt)
+    token = serializer.dumps(email, salt=salt1)
     msg = Message('Welcome email from History Footnote', sender="noe.dinh@gmail.com", recipients=[email])
     link = url_for('confirm', token=token, _external=True)
     msg.html = '''
@@ -428,7 +428,53 @@ def confirm(token):
     return redirect('/login')
 
 
+# resetting forgotten password (following 3 functions/routes)
+@app.route('/forgot', methods=['GET', 'POST'])
+def forgot():
+    form = ForgotPassword()
+    if form.validate_on_submit():
+        if User.query.filter_by(email=form.email.data):
+            sendEmail(form.email.data)
+            return render_template('forgot_redirect.html')
+        else:
+            flash("This email does not correspond to any user")
+    return render_template("forgot.html", form=form)
 
+# method that sends email
+def sendEmail(email):
+    token = serializer.dumps(email, salt='some_salt')
+    msg = Message('Reset Password Link for History FootNote Account', sender="noe.dinh@gmail.com", recipients=[email])
+    link = url_for('reset_password', token=token, _external=True)
+    msg.html = '''
+            <!DOCTYPE html>
+            <html>
+            <body>
+                <a href={}>Reset password</a>
+                <p>(note that his link will expire within one hour)</p>
+            </body>
+            </html>
+                '''.format(link, token)
+    mail.send(msg)
+
+
+# @app.route('/reset_password/<token>', methods=['GET','POST']) #Note: can't write a get/post route with token?
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    try:
+        email = serializer.loads(token, salt='some_salt', max_age=3600)
+        form = ResetPassword()
+        if form.validate_on_submit():
+            user = User.query.filter_by(email=email).first()
+
+            salt2 = bcrypt.gensalt()
+            encrypt_pw = bcrypt.hashpw(form.new_password.data.encode(), salt2)
+        #
+            user.password = encrypt_pw.decode()
+            db.session.commit()
+        return render_template('reset_password.html', form=form, token=token)
+        # return "success loading reset page"
+    except SignatureExpired:
+        return 'The link is expired.'
 
 
 if __name__ == '__main__':
