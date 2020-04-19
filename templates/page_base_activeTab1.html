@@ -103,10 +103,11 @@
                 z-index: 1; /* Stay on top */
                 top: 0;
                 right: 0;
-                background-color: #f8f9fa; /* Black*/
-                overflow: scroll;; /* Disable horizontal scroll */
+                background-color: #f8f9fa;
+                overflow: scroll;; /* Enable horizontal scroll */
                 padding-top: 60px; /* Place content 60px from the top */
                 transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+                /*visibility: hidden;*/
             }
 
             /* The sidebar links */
@@ -153,13 +154,20 @@
             /* Set the width of the sidebar to 250px and the left margin of the page content to 250px */
             function openNav() {
                 document.getElementById("mySidebar").style.width = "250px";
-                document.getElementById("main").style.marginLeft = "250px";
+                document.getElementById("main").style.marginRight = "250px";
+            }
+            function openNav2(){
+                const sideNav = document.getElementById("mySidebar").style;
+                if (sideNav.visibility === "hidden")
+                    sideNav.visibility = "visible";
+                else
+                    sideNav.visibility = "hidden";
             }
 
             /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
             function closeNav() {
                 document.getElementById("mySidebar").style.width = "0";
-                document.getElementById("main").style.marginLeft = "0";
+                document.getElementById("main").style.marginRight = "0";
             }
         </script>
     </head>
@@ -229,9 +237,9 @@
         {# <button class="openbtn" onclick="openNav()">&#9776; Open Sidebar</button>#}
             <div class="navBOX sticky-top bg-white">
                 <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link openbtn" onclick="openNav()" href="#">Show Content Table</a>
-                    </li>
+                    <button class="nav-item openbtn btn-light]" onclick="openNav()">
+                        show table content
+                    </button>
                     <li class="nav-item">
                         <a class="nav-link {% block activeLink1 %}active{% endblock %}"
                            href="{% block link1 %}#{% endblock %}">Integral text</a>
