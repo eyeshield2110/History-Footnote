@@ -281,7 +281,7 @@
                             {% block integralText %}
                                 {% if integralText is not string %}
                                     {% for line in integralText %}
-                                        <p>{{ line|safe }}</p>
+                                        {{ line|safe }}
                                     {% endfor %}
                                 {% else %}
                                     {{ integralText }}
