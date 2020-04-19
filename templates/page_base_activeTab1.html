@@ -34,6 +34,7 @@
                 margin: 30px;
                 top: auto;
             }
+
             {% block showTable %}
             div.embedded-notes {
                 padding: 10px #9FBBBB;
@@ -54,6 +55,13 @@
 
             }
 
+{#            div.navBOX {
+                position: -webkit-sticky;
+                position: sticky;
+                top: 10px;
+                background-color: #ffffff;
+            }#}
+
             div#integral-text {
                 margin: 10px;
             }
@@ -68,9 +76,9 @@
                 padding: 10px #9FBBBB;
                 border: 1px solid rgba(58, 82, 87, 0.51);
                 margin: 30px;
+                float: right;
                 position: -webkit-sticky;
                 position: sticky;
-                float: right;
                 top: 10px;
                 width: 20vw;
                 height:20vw;
@@ -95,18 +103,18 @@
                 z-index: 1; /* Stay on top */
                 top: 0;
                 right: 0;
-                background-color: #9fbbbb; /* Black*/
-                overflow-x: hidden; /* Disable horizontal scroll */
+                background-color: #f8f9fa; /* Black*/
+                overflow: scroll;; /* Disable horizontal scroll */
                 padding-top: 60px; /* Place content 60px from the top */
                 transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
             }
 
             /* The sidebar links */
             .sidebar a {
-                padding: 8px 8px 8px 32px;
+                padding: 8px 8px 8px 20px;
                 text-decoration: none;
-                font-size: 25px;
-                color: #818181;
+                font-size: 18px;
+                color: #707874;
                 display: block;
                 transition: 0.3s;
             }
@@ -126,24 +134,7 @@
             }
 
             /* The button used to open the sidebar */
-            .openbtn {
-                {#font-size: 20px;
-                cursor: pointer;
-                background-color: #9fbbbb;
-                color: white;
-                padding: 10px 15px;
-                border: none;#}
-            }
 
-            .openbtn:hover {
-                {#background-color: #444;#}
-            }
-
-            /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
-            {##main {
-                transition: margin-right .5s; /* If you want a transition effect */
-                padding: 20px;
-            }#}
 
             /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
             @media screen and (max-height: 450px) {
@@ -190,22 +181,23 @@
 
         <div id="mySidebar" class="sidebar">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="#">About</a>
-            <a href="#">Services</a>
-            <a href="#">Clients</a>
-            <a href="#">Contact</a>
+            <a href="#">one</a>
+            <a href="#">two</a>
+            {% for chapter in listContent %}
+                <a href="#"></a> {# ...... #}
+            {% endfor %}
         </div>
 
 
-        <div class="d-none d-md-block embedded-notes">
+{#        <div class="d-none d-md-block embedded-notes">
 
-            {# Note: when adding this bs4 class "d-none d-md-block" table disappear in mobile#}
-            {# BUT the table becomes visible in tab2&3! >:( #}
+            #}{# Note: when adding this bs4 class "d-none d-md-block" table disappear in mobile#}{#
+            #}{# BUT the table becomes visible in tab2&3! >:( #}{#
 
-            <button class="btn btn-primary d-none d-md-block embedded-notes" type="button" data-toggle="collapse"
+#}{#            <button class="btn btn-primary d-none d-md-block embedded-notes" type="button" data-toggle="collapse"
                     data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                 Hide/Show
-            </button>
+            </button>#}{#
             <div class="collapse invisible-tab2" id="collapseExample">
                 <h5>Put table of content (with chapter links here: floating</h5>
                 <a href="#integral-text">Top</a>
@@ -230,28 +222,30 @@
                     consequat, leo eget bibendum sodales, augue velit cursus nunc,
                 </p>
             </div>
-        </div>
+        </div>#}
 
 
         <div class="container-fluid row book-reader col-sm-8"> {# id=main #}
         {# <button class="openbtn" onclick="openNav()">&#9776; Open Sidebar</button>#}
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link openbtn" onclick="openNav()" href="#">Show Content Table</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% block activeLink1 %}active{% endblock %}"
-                       href="{% block link1 %}#{% endblock %}">Integral text</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% block activeLink2 %}{% endblock %}"
-                       href="{% block link2 %}{{ tab2 }}{% endblock %}">Extracted notes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% block activeLink3 %}{% endblock %}"
-                       href="{% block link3 %}{{ tab3 }}{% endblock %}">Resources and external links</a>
-                </li>
-            </ul>
+            <div class="navBOX sticky-top bg-white">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link openbtn" onclick="openNav()" href="#">Show Content Table</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% block activeLink1 %}active{% endblock %}"
+                           href="{% block link1 %}#{% endblock %}">Integral text</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% block activeLink2 %}{% endblock %}"
+                           href="{% block link2 %}{{ tab2 }}{% endblock %}">Extracted notes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% block activeLink3 %}{% endblock %}"
+                           href="{% block link3 %}{{ tab3 }}{% endblock %}">Resources and external links</a>
+                    </li>
+                </ul>
+            </div>
 
             {% block activeTab %}
                 <div id="integral-text">
