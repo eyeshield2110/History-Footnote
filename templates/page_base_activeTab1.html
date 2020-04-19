@@ -62,6 +62,11 @@
                 top: 10px;
                 background-color: #ffffff;#}
             }
+            div#show{
+                position: -webkit-sticky;
+                position: sticky;
+                top: 10px;
+            }
 
             div#integral-text {
                 margin: 10px;
@@ -155,6 +160,7 @@
             /* Set the width of the sidebar to 250px and the left margin of the page content to 250px */
             function openNav() {
                 document.getElementById("mySidebar").style.width = "250px";
+                document.getElementById("main").style.marginRight = "250px";
             }
             function openNav2(){
                 const sideNav = document.getElementById("mySidebar").style;
@@ -167,6 +173,7 @@
             /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
             function closeNav() {
                 document.getElementById("mySidebar").style.width = "0";
+                document.getElementById("main").style.marginRight = "0";
             }
         </script>
     </head>
@@ -194,9 +201,10 @@
             {% for chapter in listContent %}
                 <a href="#"></a> {# ...... #}
             {% endfor %}
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         </div>
-
+        <div class="d-md-none d-lg-none d-xl-none openbtn sticky-top" id="show" onclick="openNav()">
+            <button> <<< </button>
+        </div> {# this div is only visible on mobile/shrink resizing #}
 
 {#        <div class="d-none d-md-block embedded-notes">
 
@@ -234,9 +242,9 @@
         </div>#}
 
 
-        <div class="container-fluid row book-reader col-sm-8"> {# id=main #}
+        <div id="main" class="container-fluid row book-reader col-sm-8"> {# id=main #}
         {# <button class="openbtn" onclick="openNav()">&#9776; Open Sidebar</button>#}
-            <div class="navBOX sticky-top bg-white">
+            <div class="navBOX sticky-top bg-white d-none d-md-block">
                 <ul class="nav nav-tabs">
                     <button class="nav-item openbtn btn-light sticky-top" onclick="openNav()">
                         show table content
