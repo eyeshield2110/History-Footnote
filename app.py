@@ -131,11 +131,14 @@ def active_tab1(x):
     indexBook = pathByTitleAuthor.index(x)
     listTexts = ["", "", "", readText2(("data/Dracula_by_Bram_Stoker.html"))]
     text = readText2("data/" + x + ".html")
+    id_book = indexBook + 1
+    id_book = str(id_book)
+    table_content = readText2("data/" + id_book + ".html")
     return render_template("page_base_activeTab1.html", bookCover=listBookCovers[indexBook],
                            title=listTitleAuthor[indexBook], bookSummary=listSummaries[indexBook],
                            integralText=text, tab2="/" + x + "/active_tab2",
                            tab3="/" + x + "/active_tab3", username=session.get('username'),
-                           icon=icon_path)
+                           icon=icon_path, tableContent=table_content)
 
 
 @app.route('/<x>/active_tab2')

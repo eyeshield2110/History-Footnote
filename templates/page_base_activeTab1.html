@@ -201,6 +201,14 @@
             {% for chapter in listContent %}
                 <a href="#"></a> {# ...... #}
             {% endfor %}
+
+            {% if tableContent is not string %}
+                {% for line in tableContent %}
+                    <p>{{ line|safe }}</p>
+                {% endfor %}
+            {% else %}
+                {{ tableContent }} {# if table of content does not exist, display message #}
+            {% endif %}
         </div>
         <div class="d-md-none d-lg-none d-xl-none openbtn sticky-top" id="show" onclick="openNav()">
             <button> <<< </button>
