@@ -1,6 +1,9 @@
 {% extends "page_base_activeTab1.html" %}
 
-{% block showTable %} display: none;{% endblock %}
+{% block showTable %}
+    div.embedded-notes, div.invisible-tab2 { display: none; }
+    button.embedded-notes {display: none}
+{% endblock %}
 
 {% block activeLink1 %}{% endblock %}
 {% block activeLink2 %}{% endblock %}
