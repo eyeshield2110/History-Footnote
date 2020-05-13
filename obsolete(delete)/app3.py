@@ -57,7 +57,7 @@ def find_user(username):
 # dummy home link (delete)
 @app.route("/")
 def home():
-    return render_template('(noah)home.html', username=session.get('username'))
+    return render_template('templates/(noah)home.html', username=session.get('username'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -75,7 +75,7 @@ def login():
         else:
             flash('Wrong password or username')
         return redirect('/')
-    return render_template('login.html', form=login_form)
+    return render_template('templates/login.html', form=login_form)
 
 
 # confirmation page: to write
@@ -101,7 +101,7 @@ def signup():
             return redirect("/confirm")
         else:
             flash('Username already taken. Chose another one.')
-    return render_template("signup.html", form=register_form)
+    return render_template("templates/signup.html", form=register_form)
 
 
 @app.route('/logout')

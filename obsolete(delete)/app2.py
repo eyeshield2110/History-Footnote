@@ -75,7 +75,7 @@ def login():
             return redirect(next_page)
         else:
             flash('Incorrect username/password!')
-    return render_template('login.html', form=form)
+    return render_template('templates/login.html', form=form)
 
 
 @app.route('/logout')

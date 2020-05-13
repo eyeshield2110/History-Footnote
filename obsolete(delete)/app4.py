@@ -28,7 +28,7 @@ listSummaries = readSummary()
 def home():
     list_routes = [url_for("active_tab1", x=pathByTitleAuthor[i]) for i in range(len(listBookCovers))]
     display_by_cover = {listBookCovers[i]: list_routes[i] for i in range(len(listBookCovers))}
-    return render_template("homepage_unfiltered_menu.html", title="History Footnote: Home",
+    return render_template("templates/homepage_unfiltered_menu.html", title="History Footnote: Home",
                            bookList=display_by_cover)
 
 
@@ -37,7 +37,7 @@ def filter(tag1, tag2):
     filter_paths, indexes = filter_menu_by2(tag1, tag2)
     list_routes = [url_for("active_tab1", x=filter_paths[i]) for i in range(len(filter_paths))]
     display_by_cover = {listBookCovers[indexes[i]-1]: list_routes[i-1] for i in range(len(indexes))}
-    return render_template("homepage_unfiltered_menu.html", title="History Footnote: Home",
+    return render_template("templates/homepage_unfiltered_menu.html", title="History Footnote: Home",
                            bookList=display_by_cover)
 
 
@@ -45,7 +45,7 @@ def filter(tag1, tag2):
 def active_tab1(x):
     indexBook = pathByTitleAuthor.index(x)
     listTexts = ["", "", "", readText2(("data/Dracula_by_Bram_Stoker.html"))]
-    return render_template("page_base_activeTab1.html", bookCover=listBookCovers[indexBook],
+    return render_template("templates/page_base_activeTab1.html", bookCover=listBookCovers[indexBook],
                            title=listTitleAuthor[indexBook], bookSummary=listSummaries[indexBook],
                            integralText=listTexts[indexBook], tab2="/"+x+"/active_tab2", tab3="/"+x+"/active_tab3")
 
@@ -53,7 +53,7 @@ def active_tab1(x):
 @app.route('/<x>/active_tab2')
 def active_tab2(x):
     indexBook = pathByTitleAuthor.index(x)
-    return render_template("page_activeTab2.html", bookCover=listBookCovers[indexBook],
+    return render_template("templates/page_activeTab2.html", bookCover=listBookCovers[indexBook],
                            title=listTitleAuthor[indexBook], bookSummary=listSummaries[indexBook],
                            tab3="/"+x+"/active_tab3", tab1="/"+x+"/active_tab1")
 
@@ -61,19 +61,19 @@ def active_tab2(x):
 @app.route('/<x>/active_tab3')
 def active_tab3(x):
     indexBook = pathByTitleAuthor.index(x)
-    return render_template("page_activeTab3.html", bookCover=listBookCovers[indexBook],
+    return render_template("templates/page_activeTab3.html", bookCover=listBookCovers[indexBook],
                            title=listTitleAuthor[indexBook], bookSummary=listSummaries[indexBook],
                            tab1="/"+x+"/active_tab1", tab2="/"+x+"/active_tab2")
 
 
 @app.route('/archive')
 def archive():
-    return render_template("archive.html", title="History Footnote: Archive")
+    return render_template("templates/archive.html", title="History Footnote: Archive")
 
 
 @app.route('/about')
 def about():
-    return render_template("SOEN287_A1_40128079_NOAH-JAMES_DINH.html")
+    return render_template("templates/SOEN287_A1_40128079_NOAH-JAMES_DINH.html")
 
 
 if __name__ == '__main__':

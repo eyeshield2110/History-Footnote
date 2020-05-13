@@ -1,5 +1,3 @@
-# this app is from A2
-# OLD VERSION, DO NOT USE (SEE app4.py)
 # (15 apr) 11:15pm This app is the updated version (copy from app4)
 import os
 from flask_mail import Mail, Message
