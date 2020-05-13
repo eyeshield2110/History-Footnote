@@ -2,7 +2,7 @@
 Website/Web app project started in the scope of the Web Programming course (SOEN 287) at Concordia University
 
 1. Homepage
-2. Login form <br/>
+2. Login form 
 ![](history_footnote_demo1.gif)
 
 3. Nav bar -> filtering book selection
