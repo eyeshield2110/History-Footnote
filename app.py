@@ -16,9 +16,10 @@ from flask import Flask, session, redirect, render_template, flash, url_for
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
 
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
-
+from private_id import private
 app = Flask(__name__)
 app.secret_key = 'hello'
+
 
 app.config.update(
     MAIL_SERVER='smtp.gmail.com',
