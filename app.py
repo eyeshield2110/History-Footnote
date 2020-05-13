@@ -17,17 +17,18 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from private_id import private
+
 app = Flask(__name__)
 app.secret_key = 'hello'
 
-
+# adding personal email setting so that website can send email to users
+# (to set up new account and to reset password when forgotten)
 app.config.update(
-    MAIL_SERVER='smtp.gmail.com',
-    MAIL_USERNAME='noe.dinh@gmail.com',
-    MAIL_PASSWORD='ilovemuse',
-    MAIL_PORT=587,
-    # MAIL_US_SSL=True,
-    MAIL_USE_TLS=True
+    MAIL_SERVER=private()["server"],
+    MAIL_USERNAME=private()["mail"],
+    MAIL_PASSWORD=private()["pw"],
+    MAIL_PORT=private()["port"],
+    MAIL_USE_TLS=private()["tls"]
 )
 
 # setting mail service
@@ -62,6 +63,7 @@ class Book_suggestion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
     author = db.Column(db.String)
+
 
 # do not add email to userMixin, i think thats what fuck up last time
 class User_session(UserMixin):
@@ -279,7 +281,7 @@ def account():
     else:
         icon_path = ""
     return render_template('account.html', form=form1, username=username, email=findUser(username).email
-                           , icon=icon_path )
+                           , icon=icon_path)
 
 
 @app.route('/book_suggest', methods=['GET', 'POST'])
@@ -366,7 +368,7 @@ def displayBook(title):
 @app.route("/<time>/<setting>")
 def filter_menu_by2(time, setting):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///books_db2.sqlite3'
-    filter_paths =[]
+    filter_paths = []
     ls_book_id = []
     list_routes = [url_for("active_tab1", x=pathByTitleAuthor[i]) for i in range(len(listBookCovers))]
     # result = db.session.query(Book).filter(Book.period_tag == time).filter(Book.location_tag == setting)
@@ -382,7 +384,7 @@ def filter_menu_by2(time, setting):
 
         book_id = row.id
         ls_book_id.append(book_id)
-    display_covers = {listBookCovers[i-1]: list_routes[i-1] for i in ls_book_id}
+    display_covers = {listBookCovers[i - 1]: list_routes[i - 1] for i in ls_book_id}
 
     icon_path = ""
     user = findUser(session.get('username'))
@@ -391,7 +393,8 @@ def filter_menu_by2(time, setting):
             icon_path = user.icon
     else:
         icon_path = ""
-    return render_template("homepage_unfiltered_menu.html", bookList=display_covers, title="History", icon=icon_path, username=session.get('username') )
+    return render_template("homepage_unfiltered_menu.html", bookList=display_covers, title="History", icon=icon_path,
+                           username=session.get('username'))
 
 
 # attempt to set up an email sending route
@@ -439,6 +442,7 @@ def forgot():
             flash("This email does not correspond to any user")
     return render_template("forgot.html", form=form)
 
+
 # method that sends email
 def sendEmail(email):
     token = serializer.dumps(email, salt='some_salt')
@@ -467,7 +471,7 @@ def reset_password(token):
 
             salt2 = bcrypt.gensalt()
             encrypt_pw = bcrypt.hashpw(form.new_password.data.encode(), salt2)
-        #
+            #
             user.password = encrypt_pw.decode()
             db.session.commit()
         return render_template('reset_password.html', form=form, token=token)
